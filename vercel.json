@@ -13,12 +13,7 @@
       "source": "/(.*)",
       "destination": "/"
     }
-  ],
+  ]
 
-  "functions": {
-    "api/**": {
-      "runtime": "vercel-nodejs@4.0.0",
-      "includeFiles": "prisma/**"
-    }
-  }
+  
 }
