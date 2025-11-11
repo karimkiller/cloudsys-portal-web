@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import { FormsModule } from '@angular/forms'
-import { ApiService } from '../../core/api.service'
+import { HttpClient } from '@angular/common/http'
 import { NgFor, NgIf } from '@angular/common'
+import { environment } from '../../environments/environment'
 
 @Component({
   standalone:true, selector:'app-tickets',
@@ -26,8 +27,8 @@ import { NgFor, NgIf } from '@angular/common'
 })
 export class TicketsComponent implements OnInit {
   list:any[]=[]; form:any={title:'', description:''}
-  constructor(private api: ApiService){}
+  constructor(private http: HttpClient){}
   ngOnInit(){ this.reload() }
-  reload(){ this.api.listTickets().subscribe(d=> this.list = d as any[]) }
-  create(){ this.api.createTicket(this.form).subscribe(()=>{ this.form={}; this.reload() }) }
+  reload(){ this.http.get<any[]>(`${environment.apiUrl}/tickets`).subscribe(d=> this.list=d) }
+  create(){ this.http.post(`${environment.apiUrl}/tickets`, this.form).subscribe(()=>{ this.form={}; this.reload() }) }
 }

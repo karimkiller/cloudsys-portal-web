@@ -1,12 +1,13 @@
 import { Component } from '@angular/core'
 import { FormsModule } from '@angular/forms'
-import { Router } from '@angular/router'
-import { AuthService } from '../../core/auth.service'
+import { Router, RouterLink } from '@angular/router'
+import { HttpClient } from '@angular/common/http'
+import { environment } from '../../environments/environment'
 
 @Component({
   standalone: true,
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   template: `
   <h2>Login</h2>
   <form (ngSubmit)="submit()">
@@ -15,15 +16,13 @@ import { AuthService } from '../../core/auth.service'
     <button>Login</button>
   </form>
   <p>New here? <a routerLink="/register">Register</a></p>
-  `,
+  `
 })
 export class LoginComponent {
   email=''; password=''
-  constructor(private auth: AuthService, private router: Router){}
+  constructor(private http: HttpClient, private router: Router) {}
   submit(){
-    this.auth.login(this.email, this.password).subscribe(res=>{
-      this.auth.saveToken(res.access_token)
-      this.router.navigateByUrl('/tickets')
-    })
+    this.http.post<{access_token:string}>(`${environment.apiUrl}/auth/login`, { email:this.email, password:this.password })
+      .subscribe(res => { localStorage.setItem('cloudsys_token', res.access_token); this.router.navigateByUrl('/tickets') })
   }
 }

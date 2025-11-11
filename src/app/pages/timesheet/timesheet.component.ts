@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import { FormsModule } from '@angular/forms'
-import { ApiService } from '../../core/api.service'
+import { HttpClient } from '@angular/common/http'
 import { NgFor } from '@angular/common'
+import { environment } from '../../environments/environment'
 
 @Component({
   standalone:true, selector:'app-timesheet',
@@ -23,11 +24,11 @@ import { NgFor } from '@angular/common'
 })
 export class TimesheetComponent implements OnInit {
   entries:any[]=[]; date=''; durationMs=3600000; notes=''
-  constructor(private api:ApiService){}
+  constructor(private http:HttpClient){}
   ngOnInit(){ this.reload() }
-  reload(){ this.api.listTimeEntries().subscribe(d=> this.entries = d as any[]) }
+  reload(){ this.http.get<any[]>(`${environment.apiUrl}/time-entries`).subscribe(d=> this.entries=d) }
   create(){
     const dto = { date:new Date(this.date).toISOString(), durationMs:this.durationMs, notes:this.notes }
-    this.api.createTimeEntry(dto).subscribe(()=>{ this.notes=''; this.reload() })
+    this.http.post(`${environment.apiUrl}/time-entries`, dto).subscribe(()=>{ this.notes=''; this.reload() })
   }
 }

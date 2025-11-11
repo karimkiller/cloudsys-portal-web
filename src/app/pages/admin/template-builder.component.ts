@@ -1,17 +1,16 @@
 import { Component } from '@angular/core'
 import { FormsModule } from '@angular/forms'
+import { NgFor } from '@angular/common'
 
 @Component({
   standalone: true,
   selector: 'app-template-builder',
-  imports: [FormsModule],
+  imports: [FormsModule, NgFor],
   template: `
   <h2>Admin • Template Builder</h2>
-  <p>Define a template your boss can fill when going to client sites.</p>
   <label>Template Name <input [(ngModel)]="name"></label>
   <label>Fields (comma-separated) <input [(ngModel)]="fieldsRaw" placeholder="Client, Location, Purpose, Start, End"></label>
   <button (click)="save()">Save Template</button>
-
   <h3>Preview</h3>
   <ul><li *ngFor="let f of fields">{{f}}</li></ul>
   `,
