@@ -1,14 +1,21 @@
 import { HttpInterceptorFn } from '@angular/common/http'
+import { inject } from '@angular/core'
+import { Router } from '@angular/router'
+import { AuthService } from './auth.service'
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  try {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('cloudsys_token')
-      if (token) {
-        req = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-      }
-    }
-  } catch { /* noop for SSR or restricted environments */ }
+  const auth = inject(AuthService)
+  const router = inject(Router)
 
-  return next(req)
+  if (auth.token) req = req.clone({ setHeaders: { Authorization: `Bearer ${auth.token}` } })
+
+  return next(req).pipe({
+    error(err, _caught) {
+      if (err?.status === 401) {
+        auth.logout()
+        router.navigateByUrl('/login')
+      }
+      throw err
+    }
+  } as any)
 }

@@ -1,5 +1,8 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist/cloudsys-portal-web/browser",
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
+  "functions": {
+    "api/**": { "runtime": "nodejs20.x", "includeFiles": "prisma/**" }
+  }
 }

@@ -1,28 +1,48 @@
 import { Component } from '@angular/core'
 import { FormsModule } from '@angular/forms'
-import { Router, RouterLink } from '@angular/router'
+import { RouterLink, Router } from '@angular/router'
+import { MaterialModule } from '../../shared/material'
 import { HttpClient } from '@angular/common/http'
+import { AuthService } from '../../core/auth.service'
 import { environment } from '../../../environments/environment'
 
 @Component({
   standalone: true,
   selector: 'app-login',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, MaterialModule, RouterLink],
   template: `
-  <h2>Login</h2>
-  <form (ngSubmit)="submit()">
-    <label>Email <input [(ngModel)]="email" name="email" type="email" required></label>
-    <label>Password <input [(ngModel)]="password" name="password" type="password" required></label>
-    <button>Login</button>
-  </form>
-  <p>New here? <a routerLink="/register">Register</a></p>
+  <div style="display:grid;place-items:center;height:80vh">
+    <mat-card style="width:360px">
+      <h2 mat-card-title>Sign in</h2>
+      <mat-card-content>
+        <form (ngSubmit)="submit()" #f="ngForm">
+          <mat-form-field appearance="outline" style="width:100%">
+            <mat-label>Email</mat-label>
+            <input matInput [(ngModel)]="email" name="email" type="email" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" style="width:100%">
+            <mat-label>Password</mat-label>
+            <input matInput [(ngModel)]="password" name="password" type="password" required>
+          </mat-form-field>
+
+          <button mat-flat-button color="primary" style="width:100%">Login</button>
+        </form>
+      </mat-card-content>
+      <mat-card-actions>
+        <a routerLink="/register">Create an account</a>
+      </mat-card-actions>
+    </mat-card>
+  </div>
   `
 })
 export class LoginComponent {
   email=''; password=''
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router, private http: HttpClient) {}
   submit(){
-    this.http.post<{access_token:string}>(`${environment.apiUrl}/auth/login`, { email:this.email, password:this.password })
-      .subscribe(res => { localStorage.setItem('cloudsys_token', res.access_token); this.router.navigateByUrl('/tickets') })
+    this.auth.login(this.email, this.password).subscribe(res=>{
+      this.auth.setToken(res.access_token)
+      this.router.navigateByUrl('/tickets')
+    })
   }
 }
