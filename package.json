@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration=production",
     "build:dev": "ng build",
     "preview": "npx http-server dist/cloudsys-portal-web/browser -p 4201 -o",
     "watch": "ng build --watch --configuration development",
