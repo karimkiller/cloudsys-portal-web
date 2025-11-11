@@ -1,0 +1,5 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/cloudsys-portal-web/browser",
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+}
