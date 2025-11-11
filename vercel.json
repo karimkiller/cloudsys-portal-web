@@ -7,7 +7,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://cloudsys-portal.vercel.app/"
+      "destination": "cloudsys-portal.vercel.app"
     },
     {
       "source": "/(.*)",
@@ -17,7 +17,7 @@
 
   "functions": {
     "api/**": {
-      "runtime": "nodejs20.x",
+      "runtime": "vercel-nodejs@4.0.0",
       "includeFiles": "prisma/**"
     }
   }
