@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { HttpClient } from '@angular/common/http'
 import { NgFor } from '@angular/common'
-import { environment } from '../../environments/environment'
+import { environment } from '../../../environments/environment'
 
 @Component({
   standalone:true, selector:'app-timesheet',
